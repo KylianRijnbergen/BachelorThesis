@@ -1,6 +1,7 @@
 # Import 
 import base64 #Used for encoding/decoding of base64 strings
 import numpy as np #Numpy library for arrays, tables and datastructures.
+from nltk.parse import CoreNLPParser
 
 def decodeBase64(encodedStr):
 	if(encodedStr[:10] == '=?UTF-8?B?' and encodedStr[-2:] == '?='): #only base64 encoded strings
@@ -17,5 +18,12 @@ def split(string_to_split_array):
 	for split in splits:
 		splittedArray = np.append(splittedArray, split)
 	return splittedArray
+
+
+def NER(word):
+	ner_tagger = CoreNLPParser(url='http://localhost:9000', tagtype='ner')
+	type = ner_tagger.tag(word.split())
+	return type
+
 
 	
