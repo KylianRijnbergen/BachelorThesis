@@ -1,6 +1,6 @@
 # Import 
 import base64 #Used for encoding/decoding of base64 strings
-
+import numpy as np #Numpy library for arrays, tables and datastructures.
 
 def decodeBase64(encodedStr):
 	if(encodedStr[:10] == '=?UTF-8?B?' and encodedStr[-2:] == '?='): #only base64 encoded strings
@@ -11,3 +11,11 @@ def decodeBase64(encodedStr):
 	else:
 		return encodedStr #returns encoded string
 
+def split(string_to_split_array):
+	splittedArray = np.empty(0, dtype=str)
+	splits = string_to_split_array.split()
+	for split in splits:
+		splittedArray = np.append(splittedArray, split)
+	return splittedArray
+
+	
