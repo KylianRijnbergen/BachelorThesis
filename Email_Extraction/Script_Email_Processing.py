@@ -24,6 +24,3 @@ def NER(word):
 	ner_tagger = CoreNLPParser(url='http://localhost:9000', tagtype='ner')
 	type = ner_tagger.tag(word.split())
 	return type
-
-
-	
