@@ -4,6 +4,8 @@ import numpy as np #Numpy library for arrays, tables and datastructures.
 from nltk.parse import CoreNLPParser
 import html2text as h2t
 import datetime
+import re as regex
+
 
 def decodeBase64(encodedStr):
 	if(encodedStr[:10].lower() == '=?utf-8?b?' and encodedStr[-2:] == '?='): #only base64 encoded strings
@@ -30,3 +32,8 @@ def NER(word):
 def HTML_To_Text(HTML_String):
     Plain_Text = h2t.html2text(HTML_String)
     return Plain_Text
+
+def Retreive_Email_Addresses(Email_String):
+        regex_Email_Address = '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}' #regex to recognise email address
+        Email = regex.findall(regex_Email_Address, str(Email_String))
+        return Email
