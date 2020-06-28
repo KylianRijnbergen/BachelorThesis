@@ -7,6 +7,9 @@ from collections import Counter
 import chardet
 from bs4 import BeautifulSoup as bs
 import random
+import Debugging_Functions as debug
+import pprint
+import textwrap
 
 
 def ListToString(List, Delimiter = " "):
@@ -74,19 +77,29 @@ def DetectEncoding(String):
     	return Encoding
     
 def Extract_HTML(String):
-	StartIndex = String.find("<html>")
+	StartIndex = String.find("<html")
+	print(StartIndex)
 	EndIndex = String.find("</html>")
-	HTML = String[StartIndex: EndIndex + 7]
-	return HTML
+	print(EndIndex)
+	if StartIndex == EndIndex:
+		return String
+	else:
+		return String[StartIndex: EndIndex + 7]
 	
 def Print_Email(DataFrame_Row, DataFrame_Name):
 	print("Email details: ")
 	print("Sender: " + DataFrame_Name.loc[DataFrame_Row, "Sender_Email_Username"] + ": " + DataFrame_Name.loc[DataFrame_Row, "Sender_Email_Filtered"])
 	print("Attachments: " + str(DataFrame_Name.loc[DataFrame_Row, "email_has_attachments"]))
 	print("Subject: " + DataFrame_Name.loc[DataFrame_Row, "email_subject"])
+	"""
 	Email_Raw_Body = DataFrame_Name.loc[DataFrame_Row, "email_raw_body"]
-	HTML = Extract_HTML(Email_Raw_Body)
-	print(HTML_To_Text(HTML))
+	print(debug.Return_Instance(Email_Raw_Body))
+	HTML = Extract_HTML(Email_Raw_Body)        
+	print(HTML_To_Text(HTML)) 
+	"""
+	print("Raw body: ")
+	print(textwrap.fill(DataFrame_Name.loc[DataFrame_Row, "email_raw_body"], 200))
+	print("")
 
 def Get_DataFrame_RowCount(DataFrame_Name):
 	return DataFrame_Name.shape[0]
@@ -97,7 +110,7 @@ def Get_DataFrame_ColCount(DataFrame_Name):
 def Get_Data_Not_Seen(DataFrame_Name):
 	UpperBound = Get_DataFrame_RowCount(DataFrame_Name)
 	RowToTake = random.randint(0, UpperBound - 1)
-	if DataFrame_Name.loc[RowToTake, "IsPhishing"] == 1: 
-		Get_Data_Not_Seen(DataFrame_Name)
+	if DataFrame_Name.loc[RowToTake, "Seen_Before"] == "1": 
+		return Get_Data_Not_Seen(DataFrame_Name)
 	else:
 		return RowToTake

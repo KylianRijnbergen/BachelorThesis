@@ -6,6 +6,7 @@ Created on Tue Jun  9 09:27:28 2020
 """
 
 import pandas as pd #Pandas library for DataFrames
+from datetime import datetime #Get current date and time, this is later used to create new files automatically.
 import Functions as Fn #Import Functions from Functions.py 
 
 #Declaring debugging / setting variables
@@ -14,9 +15,6 @@ Directory_Phishing_Mails = "D:/Bachelor_Thesis/Email_Extraction/"
 Reload = True
 Load_All = False
 Headers_All = True
-
-print("Write to CSV? [True/False]: ")
-To_Csv = bool(input())
 
 
 #Reloading of dataframe.
@@ -34,7 +32,6 @@ if Reload:
             Df_Raw_Data = Df_Raw_Data.append(Df_Raw_File_Data)
         del Df_Raw_File_Data
 
-print("Start!")
 #Lines below create a debugging file.
 #Debugging_File = Fn.CutDataFrame(Df_Raw_Data, 0, 100)
 #Debugging_File.to_json("D:/Bachelor_Thesis/Email_Extraction/Debugging_File_100_Rows_Only.json")
@@ -49,7 +46,9 @@ List_Data_Dates = ["date_sent", "date_received", "date_reported"] #List for all 
 
 for Header in List_Data_Headers: #Loop over all Columns
     for Index in range(0, len(Df_Raw_Data)): #Loop over all Rows.
-        Df_Raw_Data.loc[Index, "IsPhishing"] = ""
+        Df_Raw_Data.loc[Index, "IsPhishing"] = "" #Fill with null values
+        Df_Raw_Data.loc[Index, "Error"] = "" #Debugging purposes only. Set error.
+        Df_Raw_Data.loc[Index, "Seen_Before"] = "0"
         Data = Df_Raw_Data.loc[Index,Header] #Retreive value and assign it to "Data".
         if Header in List_Data_Dates: #Checks if Data is in format Timestamp by comparing Headers.
             if Data > 0: #Timestamp has to be positive. This is not the case in the raw data, this needs to be addressed.
@@ -72,22 +71,30 @@ for Header in List_Data_Headers: #Loop over all Columns
 
 #Printing Emails
 Get_Next = True
-while Get_Next:
+Items_Left = Fn.Get_DataFrame_RowCount(Df_Raw_Data)
+while Get_Next and Items_Left != 0:
     CurrentRow = Fn.Get_Data_Not_Seen(Df_Raw_Data)
     Fn.Print_Email(CurrentRow, Df_Raw_Data)
     print("Is this a Phishing Email? [True (1)/False(0)/Skip(s)/Exit(e)]: ")
     Phishing_Value = input()
-    if Phishing_Value == "s":
-        Get_Next = bool(True)
-    elif Phishing_Value == "e":
+    if Phishing_Value == "e":
         Get_Next = bool(False)
-    else:
+    elif Phishing_Value == "0" or Phishing_Value == "1": 
         Df_Raw_Data.loc[CurrentRow, "IsPhishing"] = Phishing_Value
+    else: 
+        Df_Raw_Data.loc[CurrentRow, "Error"] = Phishing_Value
+    Df_Raw_Data.loc[CurrentRow, "Seen_Before"] = "1"
+    Items_Left -= 1
 
 #Dropping columns
 Columns_To_Drop = ["links", "sender_email"]          
 Df_Filtered_Data = Df_Raw_Data.drop(columns = Columns_To_Drop)
 
 #Write to CSV 
+print("Write to CSV? [True/False]: ")
+#Comment in line below gives option not to write to CSV. As Datetime is now included, though, this defaults to True.
+To_Csv = True #bool(input())
 if To_Csv:
-    Df_Filtered_Data.to_csv("D:/Bachelor_Thesis/Email_Extraction/Raw_Data_Csv_File_" + Filename + ".csv")
+    Current_Date_And_Time = datetime.now()
+    Current_Date_And_Time_String = Current_Date_And_Time.strftime("%d_%m_%Y_%H_%M_%S")
+    Df_Filtered_Data.to_csv("D:/Bachelor_Thesis/Email_Extraction/Raw_Data_Csv_File_" + Filename + "_" + Current_Date_And_Time_String + ".csv")
