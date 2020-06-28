@@ -7,7 +7,6 @@ Created on Tue Jun  9 09:27:28 2020
 
 import pandas as pd #Pandas library for DataFrames
 import Functions as Fn #Import Functions from Functions.py 
-import random as rand #Importing random library
 
 #Declaring debugging / setting variables
 #Directory_Phishing_Mails = "D:/Bachelor_Thesis/APWG Phishing Emails/APWG Phishing Emails/" #Directory where JSON files are stored.
@@ -15,7 +14,9 @@ Directory_Phishing_Mails = "D:/Bachelor_Thesis/Email_Extraction/"
 Reload = True
 Load_All = False
 Headers_All = True
-To_Csv = True
+
+print("Write to CSV? [True/False]: ")
+To_Csv = bool(input())
 
 
 #Reloading of dataframe.
@@ -48,15 +49,8 @@ List_Data_Dates = ["date_sent", "date_received", "date_reported"] #List for all 
 
 for Header in List_Data_Headers: #Loop over all Columns
     for Index in range(0, len(Df_Raw_Data)): #Loop over all Rows.
+        Df_Raw_Data.loc[Index, "IsPhishing"] = ""
         Data = Df_Raw_Data.loc[Index,Header] #Retreive value and assign it to "Data".
-        
-        #Assign random values for IsPhishing. Debugging purposes only.
-        if rand.random() > 0.1:
-            Df_Raw_Data.loc[Index, "IsPhishing"] = 0 
-       	else:
-       		Df_Raw_Data.loc[Index, "IsPhishing"] = 1
-        	#print(str(Index) + " " + Header) #Prints current Column and Row for Debugging purposes.
-
         if Header in List_Data_Dates: #Checks if Data is in format Timestamp by comparing Headers.
             if Data > 0: #Timestamp has to be positive. This is not the case in the raw data, this needs to be addressed.
                 Data = pd.datetime.fromtimestamp(Data) #Convert Timestamp to DateTime format using Pandas.
@@ -69,16 +63,31 @@ for Header in List_Data_Headers: #Loop over all Columns
                 
             Df_Raw_Data.loc[Index, "Sender_Email_Filtered"] = Email_Address[-1]
             Email_Username = Fn.Get_Email_Username(Data, Fn.ListToString(Email_Address[-1]))
-            
-               
-            
+                           
             if len(Email_Username) != 0:
                 Df_Raw_Data.loc[Index, "Sender_Email_Username"] = Fn.ListToString(Email_Username, " ")
             else:
                 Df_Raw_Data.loc[Index, "Sender_Email_Username"] = ""
 
-          
-Df_Raw_Data = Df_Raw_Data.drop(columns = ["links"])
+
+#Printing Emails
+Get_Next = True
+while Get_Next:
+    CurrentRow = Fn.Get_Data_Not_Seen(Df_Raw_Data)
+    Fn.Print_Email(CurrentRow, Df_Raw_Data)
+    print("Is this a Phishing Email? [True (1)/False(0)/Skip(s)/Exit(e)]: ")
+    Phishing_Value = input()
+    if Phishing_Value == "s":
+        Get_Next = bool(True)
+    elif Phishing_Value == "e":
+        Get_Next = bool(False)
+    else:
+        Df_Raw_Data.loc[CurrentRow, "IsPhishing"] = Phishing_Value
+
+#Dropping columns
+Columns_To_Drop = ["links", "sender_email"]          
+Df_Filtered_Data = Df_Raw_Data.drop(columns = Columns_To_Drop)
+
 #Write to CSV 
 if To_Csv:
-    Df_Raw_Data.to_csv("D:/Bachelor_Thesis/Email_Extraction/Raw_Data_Csv_File_" + Filename + ".csv")
+    Df_Filtered_Data.to_csv("D:/Bachelor_Thesis/Email_Extraction/Raw_Data_Csv_File_" + Filename + ".csv")

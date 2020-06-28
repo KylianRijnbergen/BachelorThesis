@@ -1,11 +1,12 @@
 # Import 
 import base64 #Used for encoding/decoding of base64 strings
-import numpy as np #Numpy library for arrays, tables and datastructures.
 from nltk.parse import CoreNLPParser
 import html2text as h2t
 import re as regex
 from collections import Counter
-import pandas as pd
+import chardet
+from bs4 import BeautifulSoup as bs
+import random
 
 
 def ListToString(List, Delimiter = " "):
@@ -37,9 +38,10 @@ def NER(word):
 	Linguistic_Element_Type = ner_tagger.tag(word.split())
 	return Linguistic_Element_Type
 
-def HTML_To_Text(HTML_String):
-    Plain_Text = h2t.html2text(HTML_String)
-    return Plain_Text
+def HTML_To_Text(HTML):
+	Plain_Text = h2t.html2text(HTML)
+	#The current version of the html2text module is broken. using config.py
+	return Plain_Text
 
 #Fetch Email Address
 def Retreive_Email_Addresses(Email_String):
@@ -63,3 +65,39 @@ def RemoveDuplicates(List_Unfiltered):
 def CutDataFrame(DataFrame_Name, Startrow, Endrow):
 	Sliced_DataFrame = DataFrame_Name[Startrow: Endrow]
 	return Sliced_DataFrame
+
+def DetectEncoding(String):
+    if isinstance(String, str):
+    	ByteArray = bytearray()
+    	ByteArray.extend(map(ord, String))
+    	Encoding = chardet.detect(ByteArray)
+    	return Encoding
+    
+def Extract_HTML(String):
+	StartIndex = String.find("<html>")
+	EndIndex = String.find("</html>")
+	HTML = String[StartIndex: EndIndex + 7]
+	return HTML
+	
+def Print_Email(DataFrame_Row, DataFrame_Name):
+	print("Email details: ")
+	print("Sender: " + DataFrame_Name.loc[DataFrame_Row, "Sender_Email_Username"] + ": " + DataFrame_Name.loc[DataFrame_Row, "Sender_Email_Filtered"])
+	print("Attachments: " + str(DataFrame_Name.loc[DataFrame_Row, "email_has_attachments"]))
+	print("Subject: " + DataFrame_Name.loc[DataFrame_Row, "email_subject"])
+	Email_Raw_Body = DataFrame_Name.loc[DataFrame_Row, "email_raw_body"]
+	HTML = Extract_HTML(Email_Raw_Body)
+	print(HTML_To_Text(HTML))
+
+def Get_DataFrame_RowCount(DataFrame_Name):
+	return DataFrame_Name.shape[0]
+
+def Get_DataFrame_ColCount(DataFrame_Name):
+	return DataFrame_Name.shape[1]
+
+def Get_Data_Not_Seen(DataFrame_Name):
+	UpperBound = Get_DataFrame_RowCount(DataFrame_Name)
+	RowToTake = random.randint(0, UpperBound - 1)
+	if DataFrame_Name.loc[RowToTake, "IsPhishing"] == 1: 
+		Get_Data_Not_Seen(DataFrame_Name)
+	else:
+		return RowToTake
