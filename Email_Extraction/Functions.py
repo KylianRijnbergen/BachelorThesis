@@ -7,9 +7,12 @@ from collections import Counter
 import chardet
 from bs4 import BeautifulSoup as bs
 import random
-import Debugging_Functions as debug
 import pprint
 import textwrap
+import DataFrameFunctions as DfFun #Import DataFrameFunctions
+import email
+import mailparser
+import ErikMichelle as EM
 
 
 def ListToString(List, Delimiter = " "):
@@ -64,10 +67,6 @@ def Get_Email_Username(Email_String, Email_Address):
 def RemoveDuplicates(List_Unfiltered):
     DuplicatesRemoved = list(Counter(List_Unfiltered))
     return DuplicatesRemoved
-    
-def CutDataFrame(DataFrame_Name, Startrow, Endrow):
-	Sliced_DataFrame = DataFrame_Name[Startrow: Endrow]
-	return Sliced_DataFrame
 
 def DetectEncoding(String):
     if isinstance(String, str):
@@ -77,40 +76,63 @@ def DetectEncoding(String):
     	return Encoding
     
 def Extract_HTML(String):
-	StartIndex = String.find("<html")
+	StartIndex = String.lower().find("<html")
 	print(StartIndex)
-	EndIndex = String.find("</html>")
+	EndIndex = String.lower().find("</html>")
 	print(EndIndex)
 	if StartIndex == EndIndex:
 		return String
 	else:
 		return String[StartIndex: EndIndex + 7]
+
+def Get_Relevant_Aspects(String):
+	HTML_String = Extract_HTML(String)
+	if HTML_String != String:
+		HTML_String = HTML_To_Text(HTML_String)
+		return HTML_String
+	else:
+		return String
 	
 def Print_Email(DataFrame_Row, DataFrame_Name):
 	print("Email details: ")
-	print("Sender: " + DataFrame_Name.loc[DataFrame_Row, "Sender_Email_Username"] + ": " + DataFrame_Name.loc[DataFrame_Row, "Sender_Email_Filtered"])
+	print("Sender: " + DataFrame_Name.loc[DataFrame_Row, "Sender_Email_Username"] + ": " + DataFrame_Name.loc[DataFrame_Row, "Sender_Email_Address"])
 	print("Attachments: " + str(DataFrame_Name.loc[DataFrame_Row, "email_has_attachments"]))
 	print("Subject: " + DataFrame_Name.loc[DataFrame_Row, "email_subject"])
-	"""
-	Email_Raw_Body = DataFrame_Name.loc[DataFrame_Row, "email_raw_body"]
-	print(debug.Return_Instance(Email_Raw_Body))
-	HTML = Extract_HTML(Email_Raw_Body)        
-	print(HTML_To_Text(HTML)) 
-	"""
 	print("Raw body: ")
-	print(textwrap.fill(DataFrame_Name.loc[DataFrame_Row, "email_raw_body"], 200))
-	print("")
+	TextString = DataFrame_Name.loc[DataFrame_Row, "body_text"]
+	TextString = ListToString(TextString)
+	for line in TextString.splitlines():
+		print(line)
+	#print(DetectEncoding(TextString))
 
-def Get_DataFrame_RowCount(DataFrame_Name):
-	return DataFrame_Name.shape[0]
-
-def Get_DataFrame_ColCount(DataFrame_Name):
-	return DataFrame_Name.shape[1]
 
 def Get_Data_Not_Seen(DataFrame_Name):
-	UpperBound = Get_DataFrame_RowCount(DataFrame_Name)
+	UpperBound = DfFun.Get_DataFrame_RowCount(DataFrame_Name)
 	RowToTake = random.randint(0, UpperBound - 1)
 	if DataFrame_Name.loc[RowToTake, "Seen_Before"] == "1": 
 		return Get_Data_Not_Seen(DataFrame_Name)
 	else:
 		return RowToTake
+
+def GetEmailBody(MailString):
+	MailMessage = email.message_from_string(MailString)
+	Body = ""
+
+	if MailMessage.is_multipart():
+		for part in MailMessage.walk():
+			ctype = part.get_content_type()
+
+			if ctype == 'text/plain':
+				Body = part.get_payload(decode=True)
+	else: 
+		Body = MailMessage.get_payload(decode=True)
+	return Body
+
+def ReturnMail(MailString): 
+    MailMessage = email.message_from_string(MailString)
+    body = "" 
+    if MailMessage.is_multipart():
+        print("Is Multipart")
+    else: 
+        print("is not Multipart")
+	
