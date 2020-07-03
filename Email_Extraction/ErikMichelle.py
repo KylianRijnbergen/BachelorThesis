@@ -123,7 +123,8 @@ def make_readable(row):
     readable_text = non_readable_text.replace(' =', '').replace('= ', '')
     readable_text = readable_text.replace('=0A=', '').replace('0A=', '')
     readable_text = readable_text.replace('=A0', ' ').replace('=C2', '')
-    readable_text = readable_text.replace('\n', '')
+    #Line below removes line breaks.
+    #readable_text = readable_text.replace('\n', '')
     return readable_text
 
 def html_iterator(html):
