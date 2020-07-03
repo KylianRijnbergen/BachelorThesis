@@ -17,7 +17,7 @@ import ErikMichelle as EM
 
 def ListToString(List, Delimiter = " "):
 	if isinstance(List, list):
-		return Delimiter.join(List)
+		return Delimiter.join(str(v) for v in List )
 	else:
 		return List
     
@@ -55,6 +55,13 @@ def Retreive_Email_Addresses(Email_String):
     Email = regex.findall(regex_Email_Address, str(Email_String))
     Email_No_Dupes = RemoveDuplicates(Email)
     return Email_No_Dupes
+
+#Fetch links in text
+def Retreive_URLs(String):
+	regex_URL = '[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)'
+	URL = regex.findall(regex_URL, str(String))
+	URL_No_Dupes = RemoveDuplicates(URL)
+	return URL_No_Dupes
 
 #Remove Email Address, return username (everything that is left)
 def Get_Email_Username(Email_String, Email_Address):

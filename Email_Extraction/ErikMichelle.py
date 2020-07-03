@@ -24,6 +24,7 @@ from bs4 import BeautifulSoup as bs
 from tqdm._tqdm_notebook import tqdm_notebook as tqdm
 import dask.dataframe as dd
 from dateutil.tz import tzutc
+import Functions as Fn
 
 #from nltk.internals import find_jars_within_path
 #st = StanfordNERTagger('stanford-ner-2018-10-16/classifiers/english.all.3class.distsim.crf.ser.gz','stanford-ner-2018-10-16/stanford-ner.jar',encoding='utf-8')
@@ -115,7 +116,16 @@ def return_payload(row):
 def html_to_text(row):
     part = html_iterator(row['body_raw'])
     return part
-    
+
+def make_readable(row):
+    content = row['body_text']
+    non_readable_text = Fn.ListToString(content, " ")
+    readable_text = non_readable_text.replace(' =', '').replace('= ', '')
+    readable_text = readable_text.replace('=0A=', '').replace('0A=', '')
+    readable_text = readable_text.replace('=A0', ' ').replace('=C2', '')
+    readable_text = readable_text.replace('\n', '')
+    return readable_text
+
 def html_iterator(html):
     for i, elem in enumerate(html):
         #print(str(i)+': '+str(type(elem)))
@@ -137,10 +147,23 @@ def text_to_words(row):
     new_list = list(text_iterator(content))
     word_list=[]
     for part in new_list:
-        words = re.split("\W+|_", part)
+        words = re.split('\W+|_', part)
         lower_words = [word.lower() for word in words]
         word_list.append(lower_words)
     flat_list = list(text_iterator(word_list))
+    return flat_list
+
+def readable_text_to_words(row):
+    content = row['body_readable']
+    content = Fn.StringToList(content)
+    new_list = list(text_iterator(content))
+    word_list=[]
+    for part in new_list:
+        words = re.split(' ', part)
+        lower_words = [word for word in words]
+        word_list.append(lower_words)
+    flat_list = list(text_iterator(word_list))
+    flat_list = list(filter(("").__ne__, flat_list))
     return flat_list
 
 def text_iterator(text):
@@ -328,8 +351,14 @@ def create_columns(phishdf):
     phishdfs['body_raw'] = phishdfs.apply(return_payload, axis=1)
     print('html to text')
     phishdfs['body_text'] = phishdfs.apply(html_to_text, axis=1)
+    #Added by me: 
+    print('Text to readable Text')
+    phishdfs['body_readable'] = phishdfs.apply(make_readable, axis = 1)
     print('text to word list')
     phishdfs['body_words'] = phishdfs.apply(text_to_words, axis=1)
+    #added by me 
+    print("text to readable word list")
+    phishdfs['readable_words'] = phishdfs.apply(readable_text_to_words, axis = 1)
     print('detect language')
     phishdfs['language'] = phishdfs.apply(detect_language, axis=1)
     '''

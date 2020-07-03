@@ -12,7 +12,6 @@ import DataFrameFunctions as DfFun #Import DataFrameFunctions
 import ErikMichelle as EM 
 
 
-
 #Declaring debugging / setting variables
 #Directory_Phishing_Mails = "D:/Bachelor_Thesis/APWG Phishing Emails/APWG Phishing Emails/" #Directory where JSON files are stored.
 Directory_Phishing_Mails = "D:/Bachelor_Thesis/Email_Extraction/"
@@ -125,9 +124,6 @@ for Index in range(0, len(Df_Raw_Data)):
 
 
 
-
-
-
 Df_Filtered_Data_Full = EM.create_columns(Df_Raw_Data)
 
 
@@ -155,7 +151,9 @@ while Get_Next and Items_Left != 0:
     Items_Left -= 1
 
 #Dropping columns
-Columns_To_Drop = []
+    #Note that email_raw_object MUST be dropped in order to write to CSV. This is due to the entry being of type (email.message.Message)
+Columns_To_Drop = [  "email_raw_object"
+        ]
  #This is a list of all columns
 """ 
 Columns_To_Drop = ["id",
