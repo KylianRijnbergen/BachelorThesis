@@ -12,10 +12,11 @@ from sklearn import svm
 import matplotlib.pyplot as plt
 import DataFrameFunctions as DfFun
 import numpy as np
+from datetime import datetime
 
 #Declaring debugging / setting variables
 Directory_Labelled_Emails = "D:/Bachelor_Thesis/Email_Extraction/"
-List_Mail_Files =  ["Raw_Data_Csv_File_Debugging_File_100_Rows_Only_05_07_2020_11_27_44"]	
+List_Mail_Files =  ["Raw_Data_Csv_File_Debugging_File_100_Rows_Only_05_07_2020_15_12_07"]	
 
 Df_Data = pd.DataFrame()
 #Load files and add contents to Pandas Dataframe "Df_Raw_Data".
@@ -51,6 +52,12 @@ Df_New = Df_New.append(B)
 y = Df_New.iloc[:,3]
 X = Df_New.iloc[:, :3]
 
+To_Csv = True #bool(input())
+if To_Csv:
+    Current_Date_And_Time = datetime.now()
+    Current_Date_And_Time_String = Current_Date_And_Time.strftime("%d_%m_%Y_%H_%M_%S")
+    Df_New.to_csv("D:/Bachelor_Thesis/Email_Extraction/Raw_Data_Csv_File_" + Filename + "_" + Current_Date_And_Time_String + ".csv")
+
 model = SVC(kernel ="linear")
 model.fit(X, y)
 
@@ -83,8 +90,8 @@ def plot_svc_decision_function(model, ax=None, plot_support=True):
     
     
 
-#plt.scatter(X.iloc[:, 0], X.iloc[:, 1], c=y, s=50, cmap='autumn')
-#plot_svc_decision_function(model);
+plt.scatter(X.iloc[:, 0], X.iloc[:, 1], c=y, s=50, cmap='autumn')
+plot_svc_decision_function(model);
 
 
 print(model.support_vectors_)
