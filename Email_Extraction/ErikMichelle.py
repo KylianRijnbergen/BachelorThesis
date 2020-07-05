@@ -360,6 +360,7 @@ def create_columns(phishdf):
     #added by me 
     print("text to readable word list")
     phishdfs['readable_words'] = phishdfs.apply(readable_text_to_words, axis = 1)
+    
     print('detect language')
     phishdfs['language'] = phishdfs.apply(detect_language, axis=1)
     '''

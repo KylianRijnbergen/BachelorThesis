@@ -71,7 +71,8 @@ List_Data_Dates = ["date_sent",
 List_Columns_For_Features = ["IsPhishing", 
 "Error",
 "Seen_Before",
-"Sender_Email_Address"]
+"Sender_Email_Address",
+"URLs_in_email"]
 
 
 
@@ -126,13 +127,16 @@ for Index in range(0, len(Df_Raw_Data)):
 
 Df_Filtered_Data_Full = EM.create_columns(Df_Raw_Data)
 
-
-
-
+for Index in range(0, len(Df_Filtered_Data_Full)):
+    Data = DfFun.GetFromDataFrame(Index, "body_readable", Df_Filtered_Data_Full)
+    URL_List = Fn.Retreive_URLs(Data)
+    URL_String = Fn.ListToString(URL_List, " ")
+    DfFun.WriteToDataFrame(URL_String, Index, "URLs_in_Email", Df_Filtered_Data_Full)
+    
 
 #This is where we start labelling the Emails.
 #Printing Emails
-Get_Next = False
+Get_Next = True
 Items_Left = DfFun.Get_DataFrame_RowCount(Df_Filtered_Data_Full)
 while Get_Next and Items_Left != 0:
     CurrentRow = Fn.Get_Data_Not_Seen(Df_Filtered_Data_Full)

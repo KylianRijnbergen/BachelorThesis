@@ -58,7 +58,7 @@ def Retreive_Email_Addresses(Email_String):
 
 #Fetch links in text
 def Retreive_URLs(String):
-	regex_URL = '[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)'
+	regex_URL = '[A-Za-z0-9._%+-]+\.[A-Za-z0-9.-]+\.[A-Za-z/=()@.0-9_?&]{2,400}'
 	URL = regex.findall(regex_URL, str(String))
 	URL_No_Dupes = RemoveDuplicates(URL)
 	return URL_No_Dupes
@@ -106,8 +106,8 @@ def Print_Email(DataFrame_Row, DataFrame_Name):
 	print("Attachments: " + str(DataFrame_Name.loc[DataFrame_Row, "email_has_attachments"]))
 	print("Subject: " + DataFrame_Name.loc[DataFrame_Row, "email_subject"])
 	print("Raw body: ")
-	TextString = DataFrame_Name.loc[DataFrame_Row, "body_text"]
-	TextString = ListToString(TextString)
+	TextList = DataFrame_Name.loc[DataFrame_Row, "readable_words"]
+	TextString = ListToString(TextList)
 	for line in TextString.splitlines():
 		print(line)
 	#print(DetectEncoding(TextString))
