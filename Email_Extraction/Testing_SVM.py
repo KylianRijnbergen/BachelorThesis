@@ -41,13 +41,15 @@ Np_Labels = Labels.to_numpy()
 Accuracy = 0
 
 Start = 0
-End = 100
+End = 20
+
+#Not working for random state 231. 165 takes longer..
 
 for index in range(Start, End):
     print(index)
-    X_train, X_test, y_train, y_test = train_test_split(Np_New_Data, Np_Labels, test_size = 0.3, random_state = index)
+    X_train, X_test, y_train, y_test = train_test_split(Np_New_Data, Np_Labels, test_size = 0.2, random_state = index)
     clf = svm.SVC(kernel = 'linear')
-    clf.fit(X_train, y_train)
+    clf.fit(X_train, y_train.ravel())
     y_pred = clf.predict(X_test)
     ThisAccuracy = metrics.accuracy_score(y_test, y_pred)
     Accuracy = Accuracy + ThisAccuracy
