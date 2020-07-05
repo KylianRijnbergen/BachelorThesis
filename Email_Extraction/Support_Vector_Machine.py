@@ -26,10 +26,10 @@ for Filename in List_Mail_Files:
     del Df_Raw_File_Data
 
 Df_Numerical_Data = DfFun.GetColumnFromDataFrame(Df_Data, "id")
-#Attachments = DfFun.GetColumnFromDataFrame(Df_Data, "email_has_attachments")
+Attachments = DfFun.GetColumnFromDataFrame(Df_Data, "email_has_attachments")
 Label = DfFun.GetColumnFromDataFrame(Df_Data, "IsPhishing")
 
-#Df_Numerical_Data["Attachments"] = Attachments
+Df_Numerical_Data["Attachments"] = Attachments
 
 for index in range(0, len(Df_Numerical_Data)):
     Links = Df_Data.loc[index, "URLs_in_Email"]
@@ -48,8 +48,8 @@ Df_New = pd.DataFrame()
 Df_New = Df_New.append(A)
 Df_New = Df_New.append(B)
 
-y = Df_New.iloc[:,2]
-X = Df_New.iloc[:, :2]
+y = Df_New.iloc[:,3]
+X = Df_New.iloc[:, :3]
 
 model = SVC(kernel ="linear")
 model.fit(X, y)
@@ -83,8 +83,8 @@ def plot_svc_decision_function(model, ax=None, plot_support=True):
     
     
 
-plt.scatter(X.iloc[:, 0], X.iloc[:, 1], c=y, s=50, cmap='autumn')
-plot_svc_decision_function(model);
+#plt.scatter(X.iloc[:, 0], X.iloc[:, 1], c=y, s=50, cmap='autumn')
+#plot_svc_decision_function(model);
 
 
 print(model.support_vectors_)
