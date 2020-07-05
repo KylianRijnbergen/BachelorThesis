@@ -14,6 +14,11 @@ def CutDataFrame(DataFrame_Name, Startrow, Endrow):
 	Sliced_DataFrame = DataFrame_Name[Startrow: Endrow]
 	return Sliced_DataFrame
 
+def GetColumnFromDataFrame(DataFrame, Column):
+    df = DataFrame
+    Selected_Column = df[[Column]]
+    return Selected_Column
+
 #Get number of rows
 def Get_DataFrame_RowCount(DataFrame_Name):
 	return DataFrame_Name.shape[0]
