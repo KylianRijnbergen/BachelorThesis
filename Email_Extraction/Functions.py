@@ -5,14 +5,9 @@ import html2text as h2t
 import re as regex
 from collections import Counter
 import chardet
-from bs4 import BeautifulSoup as bs
 import random
-import pprint
-import textwrap
 import DataFrameFunctions as DfFun #Import DataFrameFunctions
 import email
-import mailparser
-import ErikMichelle as EM
 
 
 def ListToString(List, Delimiter = " "):

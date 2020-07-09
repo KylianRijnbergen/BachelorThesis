@@ -13,8 +13,8 @@ import ErikMichelle as EM
 
 
 #Declaring debugging / setting variables
-#Directory_Phishing_Mails = "D:/Bachelor_Thesis/APWG Phishing Emails/APWG Phishing Emails/" #Directory where JSON files are stored.
-Directory_Phishing_Mails = "D:/Bachelor_Thesis/Email_Extraction/"
+Directory_Phishing_Mails = "D:/Bachelor_Thesis/APWG Phishing Emails/APWG Phishing Emails/" #Directory where JSON files are stored.
+#Directory_Phishing_Mails = "D:/Bachelor_Thesis/Email_Extraction/"
 Reload = True
 Load_All = False
 Headers_All = True
@@ -34,7 +34,7 @@ if Reload:
         "phish_month_2_2019", 
         "phish_month_3_2019"]
     else:
-        List_Mail_Files =  ["Debugging_File_100_Rows_Only"]	
+        List_Mail_Files = ["phish_month_8_2018"]  #["Debugging_File_100_Rows_Only"]	
     
     #Load files and add contents to Pandas Dataframe "Df_Raw_Data".
     for Filename in List_Mail_Files:
@@ -143,7 +143,7 @@ while Get_Next and Items_Left != 0:
     for i in range(0, 5):
         print("")
     Fn.Print_Email(CurrentRow, Df_Filtered_Data_Full)
-    print("Is this a Phishing Email? [True (1)/False(0)/Error(Type message)/Exit(e)]: ")
+    print("Is this a Phishing Email? [True (1)/False(0)/Skip(s)/Exit(e)]: ")
     Phishing_Value = input()
     if Phishing_Value == "e":
         Get_Next = bool(False)
@@ -201,4 +201,4 @@ To_Csv = True #bool(input())
 if To_Csv:
     Current_Date_And_Time = datetime.now()
     Current_Date_And_Time_String = Current_Date_And_Time.strftime("%d_%m_%Y_%H_%M_%S")
-    Df_Filtered_Data_Dropped.to_csv("D:/Bachelor_Thesis/Email_Extraction/Raw_Data_Csv_File_" + Filename + "_" + Current_Date_And_Time_String + ".csv")
+    Df_Filtered_Data_Dropped.to_csv("D:/Bachelor_Thesis/Email_Extraction/Raw_Data_Csv_File_" + Filename + "_" + Current_Date_And_Time_String + "Parts_Labelled.csv")

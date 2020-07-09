@@ -51,7 +51,7 @@ End = 10
 for index in range(Start, End):
     print(index)
     X_train, X_test, y_train, y_test = train_test_split(Np_New_Data, Np_Labels, test_size = 0.2, random_state = index)
-    RF = RandomForestClassifier(n_estimators = 3, max_depth = 1, random_state = index)
+    RF = RandomForestClassifier(n_estimators = 1000, max_depth = 2, random_state = index)
     RF.fit(X_train, y_train.ravel())
     y_pred = RF.predict(X_test)
     ThisAccuracy = metrics.accuracy_score(y_test, y_pred)
