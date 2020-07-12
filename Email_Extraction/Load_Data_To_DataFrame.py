@@ -10,77 +10,63 @@ from datetime import datetime #Get current date and time, this is later used to 
 import Functions as Fn #Import Functions from Functions.py 
 import DataFrameFunctions as DfFun #Import DataFrameFunctions
 import ErikMichelle as EM 
+import os
 
 
 #Declaring debugging / setting variables
-Directory_Phishing_Mails = "D:/Bachelor_Thesis/APWG Phishing Emails/APWG Phishing Emails/" #Directory where JSON files are stored.
-#Directory_Phishing_Mails = "D:/Bachelor_Thesis/Email_Extraction/"
-Reload = True
-Load_All = False
-Headers_All = True
+#Directory_Phishing_Mails = "D:/Bachelor_Thesis/Sliced_Email_Files/" #Directory where CSV files are stored.
+Df_Raw_Data = pd.DataFrame() #Empty dataframe where our data will be stored.
+#List_Mail_Files = [
+#        "phish_month_1_2019_1"
+#        ]
 
+Directory_Sliced_Emails = "D:/Bachelor_Thesis/Sliced_Email_Files/"
+os.chdir(Directory_Sliced_Emails)
+List_Mail_Files = os.listdir()
 
-#Reloading of dataframe.
-if Reload: 
-    Df_Raw_Data = pd.DataFrame() #Empty dataframe where our data will be stored.
-    #Mail files contained in Directory_Phishing_Mails. If Load_All is set to True, all files are loaded. If False, only "phish_month_8_2018" is loaded. This is the smallest file.
-    if Load_All:
-        List_Mail_Files = ["phish_month_8_2018", 
-        "phish_month_9_2018", 
-        "phish_month_10_2018", 
-        "phish_month_11_2018", 
-        "phish_month_12_2018", 
-        "phish_month_1_2019", 
-        "phish_month_2_2019", 
-        "phish_month_3_2019"]
-    else:
-        List_Mail_Files = ["phish_month_8_2018"]  #["Debugging_File_100_Rows_Only"]	
     
-    #Load files and add contents to Pandas Dataframe "Df_Raw_Data".
-    for Filename in List_Mail_Files:
-        with open(Directory_Phishing_Mails + Filename + ".json") as File_To_Load:
-            Df_Raw_File_Data = pd.read_json(File_To_Load)
-            Df_Raw_Data = Df_Raw_Data.append(Df_Raw_File_Data)
-        del Df_Raw_File_Data
-
-#Lines below create a debugging file.
-#Debugging_File = DfFun.CutDataFrame(Df_Raw_Data, 0, 100)
-#Debugging_File.to_json("D:/Bachelor_Thesis/Email_Extraction/Debugging_File_100_Rows_Only.json")
-
-#If Headers_All is set to true, all headers are loaded. If False, only alternative is loaded.
-if Headers_All:
-    List_Data_Headers = ["id", 
-    "date_sent", 
-    "date_received", 
-    "date_reported", 
-    "links", 
-    "sender_email", 
-    "recipient_email", 
-    "email_subject", 
-    "email_raw_headers", 
-    "email_raw_body", 
-    "email_has_attachments", 
-    "modified"] #List of all headers
-else:
-    List_Data_Headers = ["sender_email"]
-
-List_Data_Dates = ["date_sent", 
-"date_received", 
-"date_reported"] #List for all headers where the data has the format "timestamp". Datatype is np.int64
-
-List_Columns_For_Features = ["IsPhishing", 
-"Error",
-"Seen_Before",
-"Sender_Email_Address",
-"URLs_in_email"]
+#Load files and add contents to Pandas Dataframe "Df_Raw_Data".
+#for Filename in List_Mail_Files:
+Filename = List_Mail_Files[0]
+with open(Directory_Sliced_Emails + Filename, encoding = "utf-8") as File_To_Load:
+    Df_Raw_Data = pd.read_csv(File_To_Load)
+        
 
 
+#List of all headers for our data.
+List_Data_Headers = [
+        "id", 
+        "date_sent", 
+        "date_received", 
+        "date_reported", 
+        "links", 
+        "sender_email", 
+        "recipient_email", 
+        "email_subject", 
+        "email_raw_headers", 
+        "email_raw_body", 
+        "email_has_attachments", 
+        "modified"
+        ]
 
+#List for all headers where the data has the format "timestamp". Datatype is np.int64
+List_Data_Dates = [
+        "date_sent", 
+        "date_received", 
+        "date_reported"
+        ]
 
+#List of all columns that need to be added.
+List_Columns_For_Features = [
+        "IsPhishing", 
+        "Error",
+        "Seen_Before",
+        "Sender_Email_Address",
+        "URLs_in_email"
+        ]
 
-
-#This is where we modify the DataFrame and Extract all features.
-# Loop over all rows
+#This is where we modify the DataFrame and preprocess our data for labelling.
+#Loop over all rows
 for Index in range(0, len(Df_Raw_Data)):
 
     #Set feature columns with blank value.
@@ -122,9 +108,6 @@ for Index in range(0, len(Df_Raw_Data)):
 
 
 
-
-
-
 Df_Filtered_Data_Full = EM.create_columns(Df_Raw_Data)
 
 for Index in range(0, len(Df_Filtered_Data_Full)):
@@ -132,6 +115,7 @@ for Index in range(0, len(Df_Filtered_Data_Full)):
     URL_List = Fn.Retreive_URLs(Data)
     URL_String = Fn.ListToString(URL_List, " ")
     DfFun.WriteToDataFrame(URL_String, Index, "URLs_in_Email", Df_Filtered_Data_Full)
+
     
 
 #This is where we start labelling the Emails.
@@ -201,4 +185,4 @@ To_Csv = True #bool(input())
 if To_Csv:
     Current_Date_And_Time = datetime.now()
     Current_Date_And_Time_String = Current_Date_And_Time.strftime("%d_%m_%Y_%H_%M_%S")
-    Df_Filtered_Data_Dropped.to_csv("D:/Bachelor_Thesis/Email_Extraction/Raw_Data_Csv_File_" + Filename + "_" + Current_Date_And_Time_String + "Parts_Labelled.csv")
+    Df_Filtered_Data_Dropped.to_csv("D:/Bachelor_Thesis/Labelled_Email_Files/_" + Filename + "_" + Current_Date_And_Time_String + "Parts_Labelled.csv")
