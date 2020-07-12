@@ -99,7 +99,7 @@ def Print_Email(DataFrame_Row, DataFrame_Name):
 	print("Email details: ")
 	print("Sender: " + DataFrame_Name.loc[DataFrame_Row, "Sender_Email_Username"] + ": " + DataFrame_Name.loc[DataFrame_Row, "Sender_Email_Address"])
 	print("Attachments: " + str(DataFrame_Name.loc[DataFrame_Row, "email_has_attachments"]))
-	print("Subject: " + DataFrame_Name.loc[DataFrame_Row, "email_subject"])
+	print("Subject: " + str(DataFrame_Name.loc[DataFrame_Row, "email_subject"]))
 	print("Raw body: ")
 	TextList = DataFrame_Name.loc[DataFrame_Row, "readable_words"]
 	TextString = ListToString(TextList)
