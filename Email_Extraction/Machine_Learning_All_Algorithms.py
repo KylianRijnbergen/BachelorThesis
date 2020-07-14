@@ -17,6 +17,10 @@ from sklearn.model_selection import train_test_split
 from sklearn import metrics
 #Sklearn Libraries-Specific
 from sklearn import svm
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.neural_network import MLPClassifier
+from sklearn.ensemble import RandomForestClassifier
 
 
 #Selecting which files to load.
@@ -47,16 +51,22 @@ Start = 0
 End = 1
 
 
+classifiers = [
+        svm.SVC(kernel = "rbf", gamma = "scale"),
+        RandomForestClassifier(n_estimators = 1000, max_depth = 2),
+        MLPClassifier(solver = "lbfgs", alpha = 1, hidden_layer_sizes = (500,20)),
+        LogisticRegression(solver = "lbfgs"),
+        AdaBoostClassifier(n_estimators=5, learning_rate=1)
+        ]
+
+
 for index in range(Start, End):
     print(index)
     X_train, X_test, y_train, y_test = train_test_split(Np_Feature_Vectors, Np_Labels, test_size = 0.2, random_state = index)
-    clf = svm.SVC(kernel = "rbf", gamma = "scale")
-    clf.fit(X_train, y_train.ravel())
-    y_pred = clf.predict(X_test)
-    print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
-    print("Precision:",metrics.precision_score(y_test, y_pred))
-    print("Recall:",metrics.recall_score(y_test, y_pred))
-    del clf
-    
-
-
+    for clf in classifiers:
+        clf.fit(X_train, y_train.ravel())
+        y_pred = clf.predict(X_test)
+        print(type(clf))
+        print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
+        print("Precision:",metrics.precision_score(y_test, y_pred))
+        print("Recall:",metrics.recall_score(y_test, y_pred))
