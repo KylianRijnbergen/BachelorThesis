@@ -22,6 +22,7 @@ def vec(w):
 
 #function for getting the closest word.    
 words_matrix = words.as_matrix()
+
 def find_closest_word(v):
     diff = words_matrix - v
     delta = np.sum(diff * diff, axis = 1)
@@ -31,7 +32,7 @@ def find_closest_word(v):
 #Definition of class "MailVector
 class MailVector:
     """ 
-    The class MailVector stores mail ID, and a vector containing a matrix of all of it's word vectors.
+    The class MailVector vectorizes Emails.
     """
     
     def __init__(self, mailstring):
@@ -55,7 +56,4 @@ class MailVector:
 
     def get_average_vector(self):
         df = self.all_vectors[np.arange(1,51)]
-        self.avg_vector = df.mean()
-        
-                    
-                       
+        self.avg_vector = df.mean()                       
