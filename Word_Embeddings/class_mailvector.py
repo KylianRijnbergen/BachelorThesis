@@ -5,7 +5,7 @@ Created on Tue Jul 14 10:24:16 2020
 @author: Kylian Rijnbergen
 """
 
-from Bag_of_Words import TextToBow
+from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
 import pandas as pd
 import csv
@@ -29,6 +29,17 @@ def find_closest_word(v):
     i = np.argmin(delta)
     return words.iloc[i].name
 
+#Definition of class "BagOfWords"
+class BagOfWords:
+    """
+    BagOfWords converts a string to a bag of words. Attributes: matrix, tokens
+    """
+    
+    def __init__(self, string):
+        vectorizer = CountVectorizer()
+        self.matrix = vectorizer.fit_transform(string.split(" "))
+        self.tokens = vectorizer.get_feature_names()
+
 #Definition of class "MailVector
 class MailVector:
     """ 
@@ -37,17 +48,16 @@ class MailVector:
     
     def __init__(self, mailstring):
         self.mailstring = mailstring
+        self.matrix = BagOfWords(mailstring).matrix
+        self.tokens = BagOfWords(mailstring).tokens
         self.all_vectors = pd.DataFrame(columns = np.arange(0, 51))
         self.vectorize()
         self.get_average_vector()
         
-        
-    def get_bag_of_words(self):
-        return TextToBow(self.mailstring)
             
     def vectorize(self):
-        for index in range(0, len(self.get_bag_of_words().tokens)):
-            word = self.get_bag_of_words().tokens[index]
+        for index in range(0, len(self.tokens)):
+            word = self.tokens[index]
             wordvec = vec(word)
             for i in range(0, 50):
                 if wordvec is not None: 
