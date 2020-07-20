@@ -28,28 +28,34 @@ def find_closest_word(v):
     i = np.argmin(delta)
     return words.iloc[i].name
 
-
 #Definition of class "MailVector
 class MailVector:
     """ 
     The class MailVector stores mail ID, and a vector containing a matrix of all of it's word vectors.
     """
     
-    def __init__(self, index, mailstring):
-        self.index = index
+    def __init__(self, mailstring):
         self.mailstring = mailstring
-        self.word_vectors = pd.DataFrame(columns = ["word", "vector"])
+        self.all_vectors = pd.DataFrame(columns = np.arange(0, 51))
+        self.vectorize()
+        self.get_average_vector()
+        
         
     def get_bag_of_words(self):
         return TextToBow(self.mailstring)
-        
-    def get_email_vector(self):
-        for index in range(len(self.get_bag_of_words().tokens)):
+            
+    def vectorize(self):
+        for index in range(0, len(self.get_bag_of_words().tokens)):
             word = self.get_bag_of_words().tokens[index]
             wordvec = vec(word)
-            df_row = pd.DataFrame(columns = ["word", "vector"])
-            df_row.loc[index, "word"] = word
-            df_row.loc[index, "vector"] = wordvec
-            self.word_vectors = self.word_vectors.append(df_row)
+            for i in range(0, 50):
+                if wordvec is not None: 
+                    self.all_vectors.loc[index, 0] = word
+                    self.all_vectors.loc[index, i + 1] = wordvec[i]
 
-            
+    def get_average_vector(self):
+        df = self.all_vectors[np.arange(1,51)]
+        self.avg_vector = df.mean()
+        
+                    
+                       
