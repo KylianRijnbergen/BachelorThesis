@@ -37,7 +37,7 @@ class BagOfWords:
     
     def __init__(self, string):
         vectorizer = CountVectorizer()
-        self.matrix = vectorizer.fit_transform(string.split(" "))
+        self.words_one_hot = vectorizer.fit_transform(string.split(" ")).toarray()
         self.tokens = vectorizer.get_feature_names()
 
 #Definition of class "MailVector
@@ -48,11 +48,13 @@ class MailVector:
     
     def __init__(self, mailstring):
         self.mailstring = mailstring
-        self.matrix = BagOfWords(mailstring).matrix
+        words_one_hot = BagOfWords(mailstring).words_one_hot
+        self.word_counts = np.sum(words_one_hot, axis = 0)
         self.tokens = BagOfWords(mailstring).tokens
         self.all_vectors = pd.DataFrame(columns = np.arange(0, 51))
         self.vectorize()
         self.get_average_vector()
+        self.get_weighted_average_vector()
         
             
     def vectorize(self):
@@ -66,4 +68,22 @@ class MailVector:
 
     def get_average_vector(self):
         df = self.all_vectors[np.arange(1,51)]
-        self.avg_vector = df.mean()                       
+        self.avg_vector = df.mean()    
+
+    def get_weighted_average_vector(self):
+        df = self.all_vectors[np.arange(0,51)]
+        self.weighted_avg_vector = df
+        sum_vector = np.zeros(50) 
+        total = 0
+        for word in self.tokens:
+            index = self.tokens.index(word)
+            count = self.word_counts[index]
+            wordvec = vec(word)
+            if wordvec is not None:
+                sum_vector = sum_vector + wordvec * count
+                total += 1 * count
+        self.weighted_vector = sum_vector/total
+            
+            
+            
+            
