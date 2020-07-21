@@ -1,27 +1,36 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Jul 14 11:33:55 2020
-
-@author: Kylian Rijnbergen
-"""
-
+from timeit import default_timer as timer
 import pandas as pd
-import class_mailvector
+import numpy as np
+from class_mailvector import MailVector
 
-Df_Data = pd.read_excel("vector_data.xlsx")[["Column1", "body_readable", "IsPhishing"]]
+start1 = timer()
+VECTOR_DIMENSIONS = 300
+VECTOR_DIMENSIONS_LIST = np.arange(0,VECTOR_DIMENSIONS).tolist()
+COLUMN_HEADERS_LIST = [ 
+        "ID",
+        "Label"
+        ]
 
-df_vectorized_emails = pd.DataFrame(columns = ["email_id", "word_matrix"])
-for index in range(0, len(Df_Data)):
-    identifier = Df_Data.loc[index, ["Column1"]]
-    body = Df_Data.loc[index, ["body_readable"]]
-    email = class_mailvector.MailVector(identifier, body)
-    email.get_email_vector()
-    df_vectorized_emails.loc[index, ["email_id"]] = identifier[0]
-    df_vectorized_emails.loc[index, ["word_matrix"]] = email.word_vectors.values[0][0] #Currently only writes the first token in an email to the dataframe. Change to write the email vector for the email, and maybe also the email vector for the nouns.
-    
-    
-    
-    
+column_list = COLUMN_HEADERS_LIST + VECTOR_DIMENSIONS_LIST
 
-    
-    
+df_data = pd.read_excel("vector_data_new.xlsx")[["Column1", "body_readable", "IsPhishing"]]
+
+
+df_vectorized_emails = pd.DataFrame(columns = column_list)
+
+end1 = timer()
+print("Time is " + str(end1 - start1))
+for index in range(0, 2): #len(df_data)):
+    start_timer2 = timer()
+    print(index)
+    df_vectorized_emails.loc[index, "ID"] = df_data.loc[index, "Column1"]
+    df_vectorized_emails.loc[index, "Label"] = df_data.loc[index, "IsPhishing"]
+    body = df_data.loc[index, "body_readable"]
+    weighted_vector = MailVector(body).weighted_vector
+    for i in range(1,301):
+        dim = i - 1
+        df_vectorized_emails.loc[index, dim] = weighted_vector[i-1]
+    end_timer2 = timer()
+    print("Time is " + str(end_timer2 - start_timer2))
+        
+df_vectorized_emails.to_csv("D:/Bachelor_Thesis/Labelled_Emails_Features_Only/Word_Vectors/" + str(VECTOR_DIMENSIONS) + "_Dimensions_Weighted_Test.csv")
