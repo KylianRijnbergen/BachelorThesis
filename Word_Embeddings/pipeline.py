@@ -48,7 +48,10 @@ class Pipeline:
         # Creating the embedding matrix
         embedding = Embeddings(embed_path, embed_dim)
         embedding_matrix = embedding.create_embedding_matrix(tokenizer, len(tokenizer.word_counts))
-
+        
+        #saving the matrix
+        self.embedding_matrix = embedding_matrix
+        
         # Creating the padded input for the deep learning model
         if max_len is None:
             max_len = np.max([len(text.split()) for text in X_train])
