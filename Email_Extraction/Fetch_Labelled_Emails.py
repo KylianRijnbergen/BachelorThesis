@@ -22,3 +22,5 @@ for filename in List_Mail_Files:
 Current_Date_And_Time = datetime.now()
 Current_Date_And_Time_String = Current_Date_And_Time.strftime("%d_%m_%Y_%H_%M_%S")
 Df_Data.to_csv("D:/Bachelor_Thesis/Labelled_Emails_Only/" + filename + "_" + Current_Date_And_Time_String + ".csv")
+#write to XLSX
+Df_Data.to_excel("D:/Bachelor_Thesis/Labelled_Emails_Only/" + filename + "_" + Current_Date_And_Time_String + ".xlsx")
