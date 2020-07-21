@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import csv
 
-words = pd.read_table("D:/Bachelor_Thesis/glove.840B.300d/glove.6B.50d.txt", sep=" ", index_col=0, header=None, quoting=csv.QUOTE_NONE)
+words = pd.read_table("C:/Users/Kylian Rijnbergen/Documents/TBK/Year_3/Module 12/glove.840B.300d.txt", sep=" ", index_col=0, header=None, quoting=csv.QUOTE_NONE)
 
 #function for getting the vector of a word.
 def vec(w):
@@ -47,11 +47,11 @@ class MailVector:
     """
     
     def __init__(self, mailstring):
-        self.mailstring = mailstring
-        words_one_hot = BagOfWords(mailstring).words_one_hot
+        self.mailstring = str(mailstring)
+        words_one_hot = BagOfWords(self.mailstring).words_one_hot
         self.word_counts = np.sum(words_one_hot, axis = 0)
-        self.tokens = BagOfWords(mailstring).tokens
-        self.all_vectors = pd.DataFrame(columns = np.arange(0, 51))
+        self.tokens = BagOfWords(self.mailstring).tokens
+        self.all_vectors = pd.DataFrame(columns = np.arange(0, 301))
         self.vectorize()
         self.get_average_vector()
         self.get_weighted_average_vector()
@@ -61,19 +61,19 @@ class MailVector:
         for index in range(0, len(self.tokens)):
             word = self.tokens[index]
             wordvec = vec(word)
-            for i in range(0, 50):
+            for i in range(0, 300):
                 if wordvec is not None: 
                     self.all_vectors.loc[index, 0] = word
                     self.all_vectors.loc[index, i + 1] = wordvec[i]
 
     def get_average_vector(self):
-        df = self.all_vectors[np.arange(1,51)]
+        df = self.all_vectors[np.arange(1,301)]
         self.avg_vector = df.mean()    
 
     def get_weighted_average_vector(self):
-        df = self.all_vectors[np.arange(0,51)]
+        df = self.all_vectors[np.arange(0,301)]
         self.weighted_avg_vector = df
-        sum_vector = np.zeros(50) 
+        sum_vector = np.zeros(300) 
         total = 0
         for word in self.tokens:
             index = self.tokens.index(word)
