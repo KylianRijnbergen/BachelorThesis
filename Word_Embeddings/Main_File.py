@@ -6,7 +6,7 @@ import pickle
 # Importing generic python packages
 import pandas as pd
 
-Df_Data = pd.read_excel("Data.xlsx")[["text", "target"]]
+Df_Data = pd.read_excel("Fruits.xlsx")[["text", "target"]]
 
 A = list(Df_Data["text"])
 B = list(Df_Data["target"])
@@ -32,7 +32,7 @@ if to_train == "True":
             embed_dim=300,
             X_test=X_test,
             Y_test=y_test,
-            epochs=3,
+            epochs=10,
             batch_size=12
             )
     if to_save == "True":
@@ -51,45 +51,11 @@ else:
 
 TextToTensor_instance = TextToTensor(
 tokenizer=results.tokenizer,
-max_len=2164
+max_len=1
 )
 
 
-is_this_a_fruit = """ 
-"* * *
-
-  
-From: Chase Alerts <wilkins61@cox.net>Date: Saturday, August 18, 2018  
-Subject: [Info] Please Verify Your Information  
-To: <Undisclosed-Recipients:;>  
-
-![3D""Image](3D""http://paymentsjournal.com/wp-conten=)
-
-**Dear Client**
-
-Due to several failed attemps to access to your account
-
-We temporary deactivated your account for your protection
-
-You have to reactivate your Bank account within the next 24 Hours in order
-to continue using it
-
-**To help protect your account** (s) fromunauthorized access, We have
-restricted your online access, which will remain in effect until you contact
-us
-
-**To restore your account, please   **[_Sign in
-To_](3D""http://owl.li/Kw4c=)=
-
-**Chase Bank**
-
-**=A9 2018 Chase Corporation. All rights reserved
-**llllllllllllllllllllllllllllllllllllllll**
-
-**ewsfghjklkhgfddfghjkkhgtr**
-
-"
-"""
+is_this_a_fruit = "apple"
 
 is_this_a_fruit_nn = TextToTensor_instance.string_to_tensor(is_this_a_fruit)
 
