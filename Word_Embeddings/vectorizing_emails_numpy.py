@@ -6,7 +6,7 @@ from class_mailvector_numpy import MailVector
 start1 = timer()
 
 
-df_data = pd.read_excel("to_vectorize.xlsx")[["Column1", "body_readable", "IsPhishing"]]
+df_data = pd.read_csv("120925072020.csv")[["body_readable", "IsPhishing"]]
 
 
 np_vectorized_emails = np.empty([0,301])
