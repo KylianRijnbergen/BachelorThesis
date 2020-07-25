@@ -13,14 +13,14 @@ COLUMN_HEADERS_LIST = [
 
 column_list = COLUMN_HEADERS_LIST + VECTOR_DIMENSIONS_LIST
 
-df_data = pd.read_excel("vector_data_new.xlsx")[["Column1", "body_readable", "IsPhishing"]]
+df_data = pd.read_excel("to_vectorize.xlsx")[["Column1", "body_readable", "IsPhishing"]]
 
 
 df_vectorized_emails = pd.DataFrame(columns = column_list)
 
 end1 = timer()
 print("Time is " + str(end1 - start1))
-for index in range(0, 2): #len(df_data)):
+for index in range(0, len(df_data)):
     start_timer2 = timer()
     print(index)
     df_vectorized_emails.loc[index, "ID"] = df_data.loc[index, "Column1"]
