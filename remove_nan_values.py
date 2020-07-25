@@ -11,6 +11,7 @@ else:
 	df = pd.read_csv(file_dir + filename + ".csv")
     
 df = df.drop(columns = "Unnamed: 0")
+df = df.drop(columns = "ID")
 
 nan_columns = df.isnull().any(axis=1)
 
