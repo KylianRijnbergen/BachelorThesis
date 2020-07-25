@@ -27,7 +27,7 @@ List_Mail_Files = os.listdir()
     
 #Load files and add contents to Pandas Dataframe "Df_Raw_Data".
 #for Filename in List_Mail_Files:
-Filename = List_Mail_Files[2]
+Filename = List_Mail_Files[7]
 with open(Directory_Sliced_Emails + Filename, encoding = "utf-8") as File_To_Load:
     Df_Raw_Data = pd.read_csv(File_To_Load)
         
