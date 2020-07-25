@@ -1,20 +1,5 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jul  9 12:33:35 2020
-
-@author: Kylian Rijnbergen
-"""
-
-#Self-Written Functions
-import DataFrameFunctions as DfFun
-
 #Data-Handling Libraries
 import pandas as pd 
-import numpy as np 
-
-#Sklearn Libraries-General
-from sklearn.model_selection import train_test_split 
-#Sklearn Libraries-Specific
 from sklearn import svm
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.linear_model import LogisticRegression
@@ -24,22 +9,45 @@ from class_performance_metrics import PerformanceMetrics
 
  
 #Selecting which files to load.
-Directory_Labelled_Emails = "D:/Bachelor_Thesis/Labelled_Emails_Features_Only/Word_Vectors/"
-df_train = pd.read_csv(Directory_Labelled_Emails + "part_1_augmented.csv")
-df_test = pd.read_csv(Directory_Labelled_Emails + "part_2.csv")
+Directory_Labelled_Emails = (
+        "D:/"
+        "Bachelor_Thesis/"
+        "Labelled_Emails_Features_Only/"
+        "Word_Vectors/"
+        )
 
-X_train = df_train.iloc[:, 2:302]
-y_train = df_train.iloc[:, 1]
-X_test = df_test.iloc[:, 2:302]
-y_test = df_test.iloc[:, 1]
+df_train = pd.read_csv(
+        Directory_Labelled_Emails 
+        + "part_1_augmented.csv"
+        )
+
+df_test = pd.read_csv(
+        Directory_Labelled_Emails 
+        + "part_2.csv"
+        )
+
+X_train = df_train.iloc[:, 1:302]
+y_train = df_train.iloc[:, 0]
+X_test = df_test.iloc[:, 1:302]
+y_test = df_test.iloc[:, 0]
 
 ##### TRAINING PART
 classifiers = [
-        svm.SVC(kernel = "rbf", gamma = "scale"),
-        RandomForestClassifier(n_estimators = 1000, max_depth = 200),
-        MLPClassifier(solver = "lbfgs", alpha = 0.0005, hidden_layer_sizes = (500,20), random_state = 3),
+        svm.SVC(kernel = "rbf", 
+                gamma = "scale"),
+                
+        RandomForestClassifier(n_estimators = 1000, 
+                               max_depth = 200),
+                               
+        MLPClassifier(solver = "lbfgs", 
+                      alpha = 0.0005, 
+                      hidden_layer_sizes = (500,20), 
+                      random_state = 3),
+                      
         LogisticRegression(solver = "lbfgs"),
-        AdaBoostClassifier(n_estimators=500, learning_rate=0.0005)
+        
+        AdaBoostClassifier(n_estimators=500, 
+                           learning_rate=0.0005)
         ]
 
 SCORE_ATTRIBUTES = [
