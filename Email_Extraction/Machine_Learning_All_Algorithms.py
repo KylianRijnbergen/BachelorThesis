@@ -50,9 +50,9 @@ else:
 Np_Data = Df_Data.to_numpy()
 
 
-Np_Feature_Vectors = np.delete(Np_Data, [0, 1, 2], axis = 1)
+Np_Feature_Vectors = np.delete(Np_Data, [0], axis = 1)
 
-Labels = DfFun.GetColumnFromDataFrame(Df_Data, "Label")
+Labels = DfFun.GetColumnFromDataFrame(Df_Data, "0")
 Np_Labels = Labels.to_numpy()
 
 
@@ -64,11 +64,11 @@ End = 5
 
 
 classifiers = [
-        #svm.SVC(kernel = "rbf", gamma = "scale"),
-        #RandomForestClassifier(n_estimators = 1000, max_depth = 2),
-        MLPClassifier(solver = "lbfgs", alpha = 0.0005, hidden_layer_sizes = (5000,200)),
-        #LogisticRegression(solver = "lbfgs"),
-        #AdaBoostClassifier(n_estimators=5, learning_rate=1)
+        svm.SVC(kernel = "rbf", gamma = "scale"),
+        RandomForestClassifier(n_estimators = 1000, max_depth = 2),
+        MLPClassifier(solver = "lbfgs", alpha = 0.3, hidden_layer_sizes = (500,20)),
+        LogisticRegression(solver = "lbfgs"),
+        AdaBoostClassifier(n_estimators=5, learning_rate=1)
         ]
 
 TEST_SIZE = 0.2
