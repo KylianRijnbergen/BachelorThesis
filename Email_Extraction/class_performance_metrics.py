@@ -10,7 +10,7 @@ class PerformanceMetrics:
     
     """ This class stores performance metrics for a certain algorithm. """
     
-    def __init__(self, classifier, random_state, test_size, y_test, y_pred):
+    def __init__(self, classifier, random_state, y_test, y_pred, *test_size):
         self.classifier = classifier
         self.random_state = random_state
         self.test_size = test_size
