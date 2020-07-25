@@ -14,7 +14,7 @@ warnings.filterwarnings("ignore")
 
 
 words = pd.read_table("C:/Users/Kylian Rijnbergen/Documents/TBK/Year_3/Module 12/glove.840B.300d.txt", sep=" ", index_col=0, header=None, quoting=csv.QUOTE_NONE)
-MEMOIZE = False
+MEMOIZE = True
 #function for getting the vector of a word. Uses Memoization.
 vec_cache = {}
 
