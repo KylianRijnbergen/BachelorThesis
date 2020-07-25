@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Jul 14 10:24:16 2020
-
 @author: Kylian Rijnbergen
 """
 
@@ -10,7 +9,7 @@ import numpy as np
 import pandas as pd
 import csv
 
-words = pd.read_table("C:/Users/Kylian Rijnbergen/Documents/TBK/Year_3/Module 12/glove.840B.300d.txt", sep=" ", index_col=0, header=None, quoting=csv.QUOTE_NONE)
+words = pd.read_table("C:/Users/Kylian Rijnbergen/Documents/TBK/Year_3/Module 12/glove.6B.300d.txt", sep=" ", index_col=0, header=None, quoting=csv.QUOTE_NONE)
 
 #function for getting the vector of a word.
 def vec(w):
@@ -83,7 +82,5 @@ class MailVector:
                 sum_vector = sum_vector + wordvec * count
                 total += 1 * count
         self.weighted_vector = sum_vector/total
-            
-            
             
             
