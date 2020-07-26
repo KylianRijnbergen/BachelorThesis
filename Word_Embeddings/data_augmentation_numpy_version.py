@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 #Adjust randomization percentage.
-RANDOMIZATION_FACTOR = 1.01 #This is a percentage-based randomizer.
+RANDOMIZATION_FACTOR = 1.02 #This is a percentage-based randomizer.
 AUGMENTATION_FREQUENCY = 10
 
 

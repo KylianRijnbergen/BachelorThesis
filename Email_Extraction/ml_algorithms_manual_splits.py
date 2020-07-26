@@ -40,7 +40,7 @@ classifiers = [
                                max_depth = 200),
                                
         MLPClassifier(solver = "lbfgs", 
-                      alpha = 0.0005, 
+                      alpha = 0.3, 
                       hidden_layer_sizes = (500,20), 
                       random_state = 3),
                       
