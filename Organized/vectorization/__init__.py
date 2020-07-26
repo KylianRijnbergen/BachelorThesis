@@ -1,0 +1,1 @@
+from vectorization.vectorizer import Vectorize
