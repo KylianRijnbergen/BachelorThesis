@@ -1,6 +1,6 @@
 #GLOBAL
-SEEDS = [0] #, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-TO_AUGMENT = False
+SEEDS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+TO_AUGMENT = True
 AUGMENTATION_PERCENTAGE = 1.01
 AUGMENTATION_FREQUENCY = 3
 TO_CLASSIFY = True
@@ -21,8 +21,14 @@ rf_combined = [(n_estimators, max_depth) for n_estimators in RF_ESTIMATORS for m
 #MULTILAYER PERCEPTRON
 TRAIN_MLP = True
 MLP_SOLVER = ["lbfgs", "sgd", "adam"] 
-MLP_ALPHA = [0.0001, 0.001, 0.01, 0.1] 
-MLP_HIDDEN_LAYERS = [(20, 20), (100, 100), (200, 200), (20), (100), (200), (20, 20, 20), (100, 100, 100), (200, 200, 200)]
+MLP_ALPHA = [0.0001, 0.001, 0.01, 0.1]
+layer_1 = [1, 10, 20, 30, 40, 50, 100, 200, 300, 400, 500]
+layer_2 = [1, 10, 20, 30, 40, 50, 100, 200, 300, 400, 500]
+layer_3 = [1, 10, 20, 30, 40, 50, 100, 200, 300, 400, 500]
+combination_constructor = [(one, two, three) for one in layer_1 for two in layer_2 for three in layer_3]
+MLP_HIDDEN_LAYERS = []
+for one, two, three in combination_constructor:
+    MLP_HIDDEN_LAYERS.append((one, two, three))    
 MLP_RANDOM_STATE = [0]
 mlp_combined = [(solver, alpha, layers, state) for solver in MLP_SOLVER for alpha in MLP_ALPHA for layers in MLP_HIDDEN_LAYERS for state in MLP_RANDOM_STATE]
 

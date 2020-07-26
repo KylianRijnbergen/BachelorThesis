@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+from timeit import default_timer as timer
 from augmentation import augment
 from classification import train_svm, train_rf, train_mlp, train_logreg, train_adaboost, evaluate, load_data
 from preprocessing import train_test_split
@@ -124,4 +125,4 @@ if __name__ == "__main__":
     for seed in SEEDS:
         main(seed)
     
-    print("Program finished.")
+    print("Program finished. Runtime was {} seconds.".format(timer()))
