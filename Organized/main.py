@@ -52,7 +52,7 @@ def main(seed, AUGMENTATION_PERCENTAGE = 1):
                 clf = train_svm(X_train, y_train, C, kernel, gamma)
                 y_pred = clf.predict(X_test)
                 accuracy = evaluate(y_test, y_pred)[0]
-                print("SVM: Seed: {}, C: {}, kernel: {}, gamma: {}, accuracy: {}.".format(seed, C, kernel, gamma, accuracy))
+                print("SVM: Seed: {}, Augmentation: {}.".format(seed, augmentation_percentage))
                 entries = {}
                 entries["C"] = C
                 entries["kernel"] = kernel
@@ -65,7 +65,7 @@ def main(seed, AUGMENTATION_PERCENTAGE = 1):
                 clf = train_rf(X_train, y_train, n_estimators, max_depth)
                 y_pred = clf.predict(X_test)
                 accuracy = evaluate(y_test, y_pred)[0]
-                #print("Random Forests: Seed: {}, n_estimators: {}, max_depth: {}, accuracy: {}.".format(seed, n_estimators, max_depth, accuracy))
+                print("Random Forests: Seed: {}, n_estimators: {}, max_depth: {}, accuracy: {}.".format(seed, n_estimators, max_depth, accuracy))
                 entries = {}
                 entries["n_estimators"] = n_estimators
                 entries["max_depth"] = max_depth
@@ -76,7 +76,7 @@ def main(seed, AUGMENTATION_PERCENTAGE = 1):
                 clf = train_mlp(X_train, y_train, solver, alpha, layers, state)
                 y_pred = clf.predict(X_test)
                 accuracy = evaluate(y_test, y_pred)[0]
-                #print("MultiLayer Perceptron: Seed: {}, solver: {}, alpha: {}, layers: {}, state: {}, accuracy: {}.".format(seed, solver, alpha, layers, state, accuracy))
+                print("MultiLayer Perceptron: Seed: {}, solver: {}, alpha: {}, layers: {}, state: {}, accuracy: {}.".format(seed, solver, alpha, layers, state, accuracy))
                 entries = {}
                 entries["solver"] = solver
                 entries["alpha"] = alpha
@@ -89,7 +89,7 @@ def main(seed, AUGMENTATION_PERCENTAGE = 1):
                 clf = train_logreg(X_train, y_train, penalty = penalty, solver = solver, C = C)
                 y_pred = clf.predict(X_test)
                 accuracy = evaluate(y_test, y_pred)[0]
-                #print("Logistic Regression: Seed: {}, penalty: {}, solver: {}, C: {}, accuracy: {}.".format(seed, penalty, solver, C, accuracy))
+                print("Logistic Regression: Seed: {}, penalty: {}, solver: {}, C: {}, accuracy: {}.".format(seed, penalty, solver, C, accuracy))
                 entries = {}
                 entries["penalty"] = penalty
                 entries["solver"] = solver
@@ -101,7 +101,7 @@ def main(seed, AUGMENTATION_PERCENTAGE = 1):
                 clf = train_adaboost(X_train, y_train, n_estimators = n_estimators, learning_rate = learning_rate)
                 y_pred = clf.predict(X_test)
                 accuracy = evaluate(y_test, y_pred)[0]
-                #print("Adaptive Boosting: Seed: {}, n_estimators: {}, learning_rate: {}, accuracy: {}.".format(seed, n_estimators, learning_rate, accuracy))
+                print("Adaptive Boosting: Seed: {}, n_estimators: {}, learning_rate: {}, accuracy: {}.".format(seed, n_estimators, learning_rate, accuracy))
                 entries = {}
                 entries["n_estimators"] = n_estimators
                 entries["learning_rate"] = learning_rate
@@ -132,7 +132,8 @@ if __name__ == "__main__":
         for seed in SEEDS:
             main(seed)
     else:
-        for seed, augmentation_percentage in  [(seed, augmentation_percentage) for seed in SEEDS for augmentation_percentage in AUGMENTATION_PERCENTAGE]:
-            main(seed, AUGMENTATION_PERCENTAGE = augmentation_percentage)     
+        for augmentation_percentage in AUGMENTATION_PERCENTAGE:
+            for seed in SEEDS:
+                main(seed, AUGMENTATION_PERCENTAGE = augmentation_percentage)     
 
     print("Program finished. Runtime was {} seconds.".format(timer()))

@@ -22,3 +22,6 @@ old_files
 
 #Ignore all .vscode directories
 **/.vscode
+
+#Ignore data files
+**/data
