@@ -27,7 +27,7 @@ List_Mail_Files = os.listdir()
     
 #Load files and add contents to Pandas Dataframe "Df_Raw_Data".
 #for Filename in List_Mail_Files:
-Filename = List_Mail_Files[7]
+Filename = List_Mail_Files[21]
 with open(Directory_Sliced_Emails + Filename, encoding = "utf-8") as File_To_Load:
     Df_Raw_Data = pd.read_csv(File_To_Load)
         
@@ -124,7 +124,7 @@ Get_Next = True
 Items_Left = DfFun.Get_DataFrame_RowCount(Df_Filtered_Data_Full)
 while Get_Next and Items_Left != 0:
     CurrentRow = Fn.Get_Data_Not_Seen(Df_Filtered_Data_Full)
-    for i in range(0, 5):
+    for _ in range(0, 100):
         print("")
     Fn.Print_Email(CurrentRow, Df_Filtered_Data_Full)
     print("Is this a Phishing Email? [True (1)/False(0)/Skip(s)/Exit(e)]: ")

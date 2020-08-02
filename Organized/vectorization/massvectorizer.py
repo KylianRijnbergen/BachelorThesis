@@ -1,7 +1,7 @@
 from timeit import default_timer as timer
 import pandas as pd
 import numpy as np
-from vectorization import Vectorize
+from vectorizer import Vectorize
 
 
 def get_shape(np_array):
@@ -10,7 +10,7 @@ def get_shape(np_array):
 start1 = timer()
 
 
-df_data = pd.read_csv("processed_120925072020.csv")[["body_readable", "IsPhishing"]]
+df_data = pd.read_csv("D:/Bachelor_Thesis/GitHub/BachelorThesis/Organized/testfiles/preprocessed_mails.csv")[["body_readable", "IsPhishing"]]
 
 
 np_vectorized_emails = np.empty([0,301])
@@ -38,4 +38,4 @@ for index in range(0, len(df_data)):
 end1 = timer()
 print("Time is " + str(end1 - start1))
         
-pd.DataFrame(np_vectorized_emails).to_csv("D:/Bachelor_Thesis/Labelled_Emails_Features_Only/Word_Vectors/300_Dimensions_Weighted_np_vectorizer_Test.csv")
+pd.DataFrame(np_vectorized_emails).to_csv("D:/Bachelor_Thesis/GitHub/BachelorThesis/Organized/testfiles/vectorized_mails.csv")

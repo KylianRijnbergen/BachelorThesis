@@ -4,8 +4,8 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import AdaBoostClassifier
 
-def train_svm(X_train, y_train, kernel = "rbf", gamma = "scale"):
-    clf = svm.SVC(kernel = kernel, gamma = gamma)
+def train_svm(X_train, y_train, C = 1, kernel = "rbf", gamma = "scale"):
+    clf = svm.SVC(C = C, kernel = kernel, gamma = gamma)
 
     clf.fit(X_train, y_train.ravel())
     return clf

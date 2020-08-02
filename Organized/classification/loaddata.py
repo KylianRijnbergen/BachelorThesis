@@ -6,12 +6,7 @@ def load_data(
         training_data = "part_1.csv", 
         testing_data = "part_2.csv"
         ): 
-    Directory_Labelled_Emails = (
-        current_dir            
-        + "/data/"
-        + "Labelled_Emails_Features_Only/"
-        + "Word_Vectors/"
-        )
+    Directory_Labelled_Emails = current_dir
 
     df_train = pd.read_csv(
             Directory_Labelled_Emails 

@@ -11,4 +11,5 @@ def evaluate(y_test, y_pred):
     precision = metrics.precision_score(y_test, y_pred)
     recall = metrics.recall_score(y_test, y_pred)
     f1_score = metrics.f1_score(y_test, y_pred)
-    return accuracy, precision, recall, f1_score
+    roc_auc_score = metrics.roc_auc_score(y_test, y_pred)
+    return accuracy, precision, recall, f1_score, roc_auc_score

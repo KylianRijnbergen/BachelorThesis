@@ -10,7 +10,7 @@ def train_test_split(
         random_state = 0, 
         part1_name = "part_1.csv",
         part2_name = "part_2.csv",
-        subdir = "/data/Labelled_Emails_Features_Only/Word_Vectors/"
+        subdir = "/testfiles/"
         ):
 
     df = pd.read_csv(current_dir + subdir + filename)

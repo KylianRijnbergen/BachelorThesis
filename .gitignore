@@ -1,5 +1,20 @@
+#Ignore old files, which contain the project before it was restructured.
 old_files
+
+#Ignore pycache for all directories
 **/__pycache__/
+
+#Ignore all .csv and .xlsx files =>
 **.csv
+**.xlsx 
+#Except for those containing experiment results <= 
+!**/Experiment_Runs_01-02_08_2020/**/*
+
+#Ignore all .json files
 **.json
+
+#Ignore all .txt files
 **.txt
+
+#Ignore all .vscode directories
+**/.vscode

@@ -2,13 +2,13 @@ import pandas as pd
 
 
 is_excel = False
-file_dir = "D:/Bachelor_Thesis/Labelled_Emails_Features_Only/Word_Vectors/"
-filename = "TestFile" #"300_Dimensions_Weighted_np_vectorizer_Test"
+file_dir = "D:/Bachelor_Thesis/GitHub/BachelorThesis/Organized/testfiles/"
+filename = "vectorized_mails.csv"
 df = pd.DataFrame()
 if is_excel:
 	df = pd.read_excel(file_dir + filename + ".xlsx")
 else:
-	df = pd.read_csv(file_dir + filename + ".csv")
+	df = pd.read_csv(file_dir + filename)
 
 try:    
     df = df.drop(columns = "Unnamed: 0")

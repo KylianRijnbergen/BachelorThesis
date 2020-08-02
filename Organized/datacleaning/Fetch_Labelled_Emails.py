@@ -1,6 +1,6 @@
 import pandas as pd #Pandas library for DataFrames
-from datetime import datetime
 import os
+import re
 
 #Declaring debugging / setting variables
 Directory_Labelled_Emails = "D:/Bachelor_Thesis/Labelled_Email_Files/"
@@ -18,9 +18,13 @@ for filename in List_Mail_Files:
         Df_Data = Df_Data.append(B)    
     del Df_Raw_File_Data
 
+Df_Data = Df_Data.loc[:, Df_Data.columns.intersection(["IsPhishing", "body_text"])]
+
 #Write to CSV
-Current_Date_And_Time = datetime.now()
-Current_Date_And_Time_String = Current_Date_And_Time.strftime("%d_%m_%Y_%H_%M_%S")
-Df_Data.to_csv("D:/Bachelor_Thesis/Labelled_Emails_Only/" + filename + "_" + Current_Date_And_Time_String + ".csv", index = False)
-#write to XLSX
-Df_Data.to_excel("D:/Bachelor_Thesis/Labelled_Emails_Only/" + filename + "_" + Current_Date_And_Time_String + ".xlsx", index = False)
+for i in range(len(Df_Data)):
+    rawtxt = Df_Data.iloc[i, 1]
+    txt = re.sub(r'\\n', '', rawtxt)
+    Df_Data.iloc[i, 1] = txt
+    
+
+Df_Data.to_csv("D:/editedmails.csv", index = False)
