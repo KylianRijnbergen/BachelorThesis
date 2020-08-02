@@ -4,6 +4,10 @@ old_files
 #Ignore pycache for all directories
 **/__pycache__/
 
+#Ignore testing files
+
+**/experimentresults
+
 #Ignore all .csv and .xlsx files =>
 **.csv
 **.xlsx 
